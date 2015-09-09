@@ -1,6 +1,6 @@
 class BoxFilesController < ApplicationController
   before_action :authenticate_user!
-  
+
   # GET /
   def index
     @path = Pathname.new(CGI.unescape(params[:path] || ''))
@@ -25,7 +25,8 @@ class BoxFilesController < ApplicationController
     upload_file = params[:upload_file]
     target_dir = Pathname.new(params[:target_dir])
     abs_target_dir = Rails.root.join('data', target_dir)
-    return unless upload_file
+    redirect_path = Pathname.new('/files/').join(target_dir).to_s
+    redirect_to redirect_path unless upload_file
     # TODO: file validation
     # TODO: overwrite check
     path = target_dir.join(upload_file.original_filename)
@@ -39,6 +40,6 @@ class BoxFilesController < ApplicationController
       action: overwrite ? 'update' : 'create',
       path: path,
     )
-    redirect_to '/files/' + target_dir.to_s
+    redirect_to redirect_path
   end
 end
