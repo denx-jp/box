@@ -1,0 +1,35 @@
+<h2><%= resource_name.to_s.humanize %>を更新</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :email, 'メールアドレス' %><br />
+    <%= f.email_field :email, autofocus: true %>
+  </div>
+
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div><%= resource.unconfirmed_email %>はメール認証待ちです</div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :password, '新しいパスワード' %> <i>(変更しない場合は空白)</i><br />
+    <%= f.password_field :password, autocomplete: "off" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation, '新しいパスワード（確認）' %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :current_password, '現在のパスワード' %><br />
+    <%= f.password_field :current_password, autocomplete: "off" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "更新" %>
+  </div>
+<% end %>
+
+<%= link_to "戻る", :back %>

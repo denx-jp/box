@@ -1,62 +1,50 @@
-<div class="container">
+<h1>DENX BOX</h1>
 
-  <% if notice %>
-  <p id="notice">
-    <div class="card-panel">
-      <%= notice %>
-    </div>
-  </p>
-  <% end %>
-
-  <h1>DENX BOX</h1>
-
-  <div class="row">
-    <div class="input-field col s11">
-      <input id="keyword" type="text" class="validate">
-      <label for="keyword">検索</label>
-    </div>
-    <div class="input-field col s1">
-      <button class="btn-large waves-effect waves-light" type="submit" name="action">
-        <i class="material-icons">search</i>
-      </button>
-    </div>
+<div class="row">
+  <div class="input-field col s11">
+    <input id="keyword" type="text" class="validate">
+    <label for="keyword">検索</label>
   </div>
-
-  <div class="row">
-    <%= form_tag '/upload', method: :post, multipart: true, class: 'col s12' do %>
-      <%= hidden_field_tag :target_dir, @path %>
-      <div class="row card-panel">
-        <div class="file-field input-field col s9">
-          <div class="btn">
-            <span>ファイル選択</span>
-            <%= file_field_tag :upload_file %>
-          </div>
-          <input class="file-path validate" type="text"/>
-        </div>
-        <div class="input-field col s3">
-          <button type="submit" class="waves-effect waves-light btn-large">
-            <i class="material-icons left">cloud_upload</i>アップロード
-          </button>
-        </div>
-      </div>
-    <% end %>
+  <div class="input-field col s1">
+    <button class="btn-large waves-effect waves-light" type="submit" name="action">
+      <i class="material-icons">search</i>
+    </button>
   </div>
-
-  <ul id="files-collection" class="collection with-header">
-    <li class="collection-header"></li>
-    <% @box_files.each do |box_file| %>
-    <a href="/files/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
-      <% if box_file[:is_directory] %>
-      <i class="material-icons circle green">folder_open</i>
-      <% else %>
-      <i class="material-icons circle">insert_drive_file</i>
-      <% end %>
-      <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
-      <p><%= box_file[:updated_at] %><br>
-        Second Line
-      </p>
-    </a>
-    <% end %>
-  </ul>
-
 </div>
+
+<div class="row">
+  <%= form_tag '/upload', method: :post, multipart: true, class: 'col s12' do %>
+    <%= hidden_field_tag :target_dir, @path %>
+    <div class="row card-panel">
+      <div class="file-field input-field col s9">
+        <div class="btn">
+          <span>ファイル選択</span>
+          <%= file_field_tag :upload_file %>
+        </div>
+        <input class="file-path validate" type="text"/>
+      </div>
+      <div class="input-field col s3">
+        <button type="submit" class="waves-effect waves-light btn-large">
+          <i class="material-icons left">cloud_upload</i>アップロード
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<ul id="files-collection" class="collection with-header">
+  <li class="collection-header"></li>
+  <% @box_files.each do |box_file| %>
+  <a href="/files/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
+    <% if box_file[:is_directory] %>
+    <i class="material-icons circle green">folder_open</i>
+    <% else %>
+    <i class="material-icons circle">insert_drive_file</i>
+    <% end %>
+    <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
+    <p><%= box_file[:updated_at] %><br>
+      Second Line
+    </p>
+  </a>
+  <% end %>
+</ul>

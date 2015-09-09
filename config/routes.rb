@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
+  root 'box_files#index'
   get '/files' => 'box_files#index'
   get '/files/*path' => 'box_files#index', format: false
   post '/upload' => 'box_files#upload'

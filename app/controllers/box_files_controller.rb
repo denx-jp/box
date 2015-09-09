@@ -1,4 +1,6 @@
 class BoxFilesController < ApplicationController
+  before_action :authenticate_user!
+  
   # GET /
   def index
     @path = Pathname.new(CGI.unescape(params[:path] || ''))

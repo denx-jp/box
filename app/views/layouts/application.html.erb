@@ -8,8 +8,11 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
+  <div class="container">
+    <% if notice %><p class="notice card-panel"><%= notice %></p><% end %>
+    <% if alert %><p class="alert card-panel"><%= alert %></p><% end %>
+    <%= yield %>
+  </div>
 
 </body>
 </html>
