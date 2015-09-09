@@ -6,6 +6,6 @@ class User < ActiveRecord::Base
          :confirmable
 
   def admin?
-    true
+    self.is_admin
   end
 end

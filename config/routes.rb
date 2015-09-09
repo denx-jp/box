@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   root 'box_files#index'
   get '/files' => 'box_files#index'
+  get '/search' => 'box_files#search'
   get '/files/*path' => 'box_files#index', format: false
   post '/upload' => 'box_files#upload'
   get '/histories' => 'box_histories#index'
