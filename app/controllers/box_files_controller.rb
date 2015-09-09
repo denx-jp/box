@@ -7,7 +7,7 @@ class BoxFilesController < ApplicationController
   def index
     @path = Pathname.new(CGI.unescape(params[:path] || ''))
     if File.directory?(DATA_DIR + @path)
-      @box_files = glob_files('*')
+      @box_files = glob_files(DATA_DIR + @path + '*')
     else
       send_file target, disposition: :inline
     end
@@ -15,7 +15,7 @@ class BoxFilesController < ApplicationController
 
   def search
     keyword = params[:keyword]
-    @box_files = glob_files('**/*').select do |box_file|
+    @box_files = glob_files(DATA_DIR + '**/*').select do |box_file|
       box_file[:basename].include?(keyword)
     end
     render :index
@@ -45,11 +45,10 @@ class BoxFilesController < ApplicationController
 
   private
   def glob_files(pattern)
-    Dir.glob(DATA_DIR + pattern).reject {|n| n == '.'}.map do |path|
-      abs_path = DATA_DIR.join(path)
+    Dir.glob(pattern).reject {|n| n == '.'}.map do |abs_path|
       {
-        path: path,
-        basename: File.basename(path),
+        path: Pathname.new(abs_path).relative_path_from(DATA_DIR).to_s,
+        basename: File.basename(abs_path),
         is_directory: File.directory?(abs_path),
         updated_at: File.mtime(abs_path),
       }

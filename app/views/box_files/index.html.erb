@@ -51,7 +51,7 @@
     <% end %>
     <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
     <p><%= box_file[:updated_at] %><br>
-      Second Line
+      <%= box_file[:path] %>
     </p>
   </a>
   <% end %>
