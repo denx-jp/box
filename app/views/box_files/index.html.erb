@@ -5,7 +5,7 @@
   <div class="col s6" style="margin-top: 2em;">
     <%= form_tag '/search', method: :get do %>
     <div class="input-field col s8">
-      <input id="keyword" name="keyword" type="text" class="validate">
+      <input id="keyword" name="keyword" type="text" class="validate" value="<%= params[:keyword] %>">
       <label for="keyword">ファイル名検索</label>
     </div>
     <div class="input-field col s4">
@@ -41,7 +41,7 @@
 </div>
 
 <ul id="files-collection" class="collection with-header">
-  <li class="collection-header"></li>
+  <li class="collection-header"><%= @path %></li>
   <% @box_files.each do |box_file| %>
   <a href="/files/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
     <% if box_file[:is_directory] %>
@@ -50,9 +50,8 @@
     <i class="material-icons circle">insert_drive_file</i>
     <% end %>
     <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
-    <p><%= box_file[:updated_at] %><br>
-      <%= box_file[:path] %>
-    </p>
+    <p><%= box_file[:updated_at].strftime('%Y/%m/%d %H:%I:%S') %><br>
+      <%= box_file[:path] %></p>
   </a>
   <% end %>
 </ul>

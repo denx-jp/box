@@ -9,7 +9,7 @@ class BoxFilesController < ApplicationController
     if File.directory?(DATA_DIR + @path)
       @box_files = glob_files(DATA_DIR + @path + '*')
     else
-      send_file target, disposition: :inline
+      send_file DATA_DIR + @path, disposition: :inline
     end
   end
 
