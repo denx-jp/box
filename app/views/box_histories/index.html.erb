@@ -1,0 +1,25 @@
+<h1>History</h1>
+
+<div class="card-panel">
+  <table class="striped">
+    <thead>
+      <tr>
+        <th data-field="action">Action</th>
+        <th data-field="user">User</th>
+        <th data-field="path">Path</th>
+        <th data-field="created_at">Crated At</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @update_histories.each do |h| %>
+      <tr>
+        <td><%= h.action %></td>
+        <td> - </td>
+        <td><%= link_to h.path, '/files/' + h.path %></td>
+        <td><%= h.created_at %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
