@@ -45,7 +45,7 @@
   <ul id="files-collection" class="collection with-header">
     <li class="collection-header"></li>
     <% @box_files.each do |box_file| %>
-    <a href="/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
+    <a href="/files/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
       <% if box_file[:is_directory] %>
       <i class="material-icons circle green">folder_open</i>
       <% else %>

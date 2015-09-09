@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  root 'box_files#index'
-  get '/*path' => 'box_files#index', format: false
+  get '/files' => 'box_files#index'
+  get '/files/*path' => 'box_files#index', format: false
   post '/upload' => 'box_files#upload'
+  get '/histories' => 'box_histories#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

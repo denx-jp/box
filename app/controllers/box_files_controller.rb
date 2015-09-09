@@ -26,11 +26,17 @@ class BoxFilesController < ApplicationController
     return unless upload_file
     # TODO: file validation
     # TODO: overwrite check
+    path = target_dir.join(upload_file.original_filename)
     save_path = abs_target_dir.join(upload_file.original_filename)
+    overwrite = File.exists?(save_path)
     File.open(save_path, "wb") do |f|
       f.write(upload_file.read)
     end
-    flash[:notice] = "アップロード成功：#{target_dir.join(upload_file.original_filename)}"
-    redirect_to '/' + target_dir.to_s
+    flash[:notice] = "アップロード成功：#{path}"
+    UpdateHistory.create(
+      action: overwrite ? 'update' : 'create',
+      path: path,
+    )
+    redirect_to '/files/' + target_dir.to_s
   end
 end
