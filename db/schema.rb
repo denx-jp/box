@@ -11,16 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150908071045) do
+ActiveRecord::Schema.define(version: 20150909001952) do
 
   create_table "box_files", force: :cascade do |t|
-    t.string   "name",           limit: 255,               null: false
-    t.integer  "parent_file_id", limit: 4
-    t.boolean  "is_directory",   limit: 1,                 null: false
-    t.integer  "owner_user_id",  limit: 4,                 null: false
-    t.integer  "permission",     limit: 4,   default: 420, null: false
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.string   "name",                    limit: 255,               null: false
+    t.integer  "parent_file_id",          limit: 4
+    t.boolean  "is_directory",            limit: 1,                 null: false
+    t.integer  "owner_user_id",           limit: 4,                 null: false
+    t.integer  "permission",              limit: 4,   default: 420, null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
+    t.string   "attachment_file_name",    limit: 255
+    t.string   "attachment_content_type", limit: 255
+    t.integer  "attachment_file_size",    limit: 4
+    t.datetime "attachment_updated_at"
   end
 
 end

@@ -11,7 +11,24 @@
     </div>
   <% end %>
 
+  <div class="row">
+    <div class="file-field input-field">
+      <input class="file-path validate" type="text"/>
+      <div class="btn">
+        <span>ファイル</span>
+        <input type="file" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s6">
+      <input id="file_name" type="text" class="validate">
+      <label for="file_name">ファイル名</label>
+    </div>
+  </div>
+
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit label: 'text', class: 'btn waves-effect waves-light' %>
   </div>
 <% end %>

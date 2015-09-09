@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Box Files</h1>
+<h1>DENX BOX</h1>
 
 <table>
   <thead>
@@ -12,6 +12,7 @@
   <tbody>
     <% @box_files.each do |box_file| %>
       <tr>
+        <td><%= box_file.name %></td>
         <td><%= link_to 'Show', box_file %></td>
         <td><%= link_to 'Edit', edit_box_file_path(box_file) %></td>
         <td><%= link_to 'Destroy', box_file, method: :delete, data: { confirm: 'Are you sure?' } %></td>
