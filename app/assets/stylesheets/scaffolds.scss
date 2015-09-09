@@ -1,7 +1,7 @@
 body {
-  background-color: #fff;
+  background: #eee;
   color: #333;
-  font-family: verdana, arial, helvetica, sans-serif;
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   font-size: 13px;
   line-height: 18px;
 }
@@ -66,4 +66,9 @@ div {
     font-size: 12px;
     list-style: square;
   }
+}
+
+#files-collection .collection-item.avatar .title {
+  font-size: 24px;
+  color: #222;
 }

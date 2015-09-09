@@ -1,26 +1,23 @@
-<p id="notice"><%= notice %></p>
+<div class="container">
 
-<h1>DENX BOX</h1>
+  <p id="notice"><%= notice %></p>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <h1>/<%= @path %> on DENX BOX</h1>
 
-  <tbody>
+  <ul id="files-collection" class="collection">
     <% @box_files.each do |box_file| %>
-      <tr>
-        <td><%= box_file.name %></td>
-        <td><%= link_to 'Show', box_file %></td>
-        <td><%= link_to 'Edit', edit_box_file_path(box_file) %></td>
-        <td><%= link_to 'Destroy', box_file, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+    <a href="/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
+      <% if box_file[:is_directory] %>
+      <i class="material-icons circle green">folder_open</i>
+      <% else %>
+      <i class="material-icons circle">insert_drive_file</i>
+      <% end %>
+      <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
+      <p><%= box_file[:updated_at] %><br>
+        Second Line
+      </p>
+    </a>
     <% end %>
-  </tbody>
-</table>
+  </ul>
 
-<br>
-
-<%= link_to 'New Box file', new_box_file_path %>
+</div>

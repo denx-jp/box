@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  resources :box_files
+  root 'box_files#index'
+  get '/*path' => 'box_files#index', format: false
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
