@@ -43,6 +43,23 @@ class BoxFilesController < ApplicationController
     redirect_to redirect_path
   end
 
+  def delete
+    @path = Pathname.new(CGI.unescape(params[:path] || ''))
+    abs_path = DATA_DIR + @path
+    if File.directory?(abs_path)
+      FileUtils.rm_r(abs_path)
+    else
+      FileUtils.rm(abs_path)
+    end
+    flash[:notice] = "削除成功：#{@path}"
+    UpdateHistory.create(
+      action: 'delete',
+      path: @path,
+    )
+    redirect_path = File.dirname(Pathname.new('/files/').join(@path).to_s)
+    redirect_to redirect_path
+  end
+
   private
   def glob_files(pattern)
     Dir.glob(pattern).reject {|n| n == '.'}.map do |abs_path|
@@ -51,6 +68,7 @@ class BoxFilesController < ApplicationController
         basename: File.basename(abs_path),
         is_directory: File.directory?(abs_path),
         updated_at: File.mtime(abs_path),
+        is_image: ['.jpg', '.gif', '.png'].include?(File.extname(abs_path)),
       }
     end
   end

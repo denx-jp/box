@@ -49,9 +49,19 @@
     <% else %>
     <i class="material-icons circle">insert_drive_file</i>
     <% end %>
+
     <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
-    <p><%= box_file[:updated_at].strftime('%Y/%m/%d %H:%I:%S') %><br>
-      <%= box_file[:path] %></p>
+    <p>
+      <%= box_file[:updated_at].strftime('%Y/%m/%d %H:%I:%S') %><br>
+      <%= box_file[:path] %>
+    </p>
+
+    <%= form_tag '/delete', method: :post, class: 'delete-form' do %>
+      <%= hidden_field_tag :path, box_file[:path] %>
+      <%= button_tag type: :submit, class: 'secondary-content', style: 'border:none; background: none;' do %>
+      <i class="material-icons red-text">delete</i>
+      <% end %>
+    <% end %>
   </a>
   <% end %>
 </ul>

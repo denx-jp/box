@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get '/search' => 'box_files#search'
   get '/files/*path' => 'box_files#index', format: false
   post '/upload' => 'box_files#upload'
+  post '/delete' => 'box_files#delete'
   get '/histories' => 'box_histories#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
