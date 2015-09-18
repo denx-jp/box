@@ -14,3 +14,5 @@
 !/log/.keep
 /tmp
 data/*
+
+public/assets/

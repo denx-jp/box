@@ -52,3 +52,4 @@ production:
   database: box_denx_jp_production
   username: box_denx_jp
   password: <%= ENV['BOX_DENX_JP_DATABASE_PASSWORD'] %>
+  host: 192.168.0.120
