@@ -1,75 +1,83 @@
 class BoxFilesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_path
 
   DATA_DIR = Rails.root.join('data')
 
   # GET /
   def index
-    @path = Pathname.new(CGI.unescape(params[:path] || ''))
-    if File.directory?(DATA_DIR + @path)
-      @box_files = glob_files(DATA_DIR + @path + '*')
-    else
-      send_file DATA_DIR + @path, disposition: :inline
+    if @path.directory?
+      @box_files = get_contain_box_files(@path)
+    elsif @path.file?
+      send_file @path, disposition: :inline
     end
   end
 
   def search
     keyword = params[:keyword]
-    @box_files = glob_files(DATA_DIR + '**/*').select do |box_file|
-      box_file[:basename].include?(keyword)
-    end
+    @box_files = get_contain_box_files(@path, recursive: true)
+      .select {|file| file[:basename].include?(keyword)}
     render :index
   end
 
   def upload
     upload_file = params[:upload_file]
-    target_dir = Pathname.new(params[:target_dir])
-    abs_target_dir = Rails.root.join('data', target_dir)
-    redirect_path = Pathname.new('/files/').join(target_dir).to_s
-    redirect_to redirect_path unless upload_file
     # TODO: file validation
-    # TODO: overwrite check
-    path = target_dir.join(upload_file.original_filename)
-    save_path = abs_target_dir.join(upload_file.original_filename)
-    overwrite = File.exists?(save_path)
-    File.open(save_path, "wb") do |f|
-      f.write(upload_file.read)
-    end
-    flash[:notice] = "アップロード成功：#{path}"
-    UpdateHistory.create(
-      action: overwrite ? 'update' : 'create',
-      path: path,
-    )
-    redirect_to redirect_path
+    save_path = @path.join(upload_file.original_filename)
+    is_overwrite = File.exists?(save_path)
+    FileUtils.move(upload_file.path, save_path)
+    UpdateHistory.create(action: is_overwrite ? 'update' : 'create', path: @relative_path)
+    flash[:notice] = "アップロード成功：#{save_path.relative_path_from(DATA_DIR)}"
+    redirect_to make_redirect_path(@relative_path)
   end
 
   def delete
-    @path = Pathname.new(CGI.unescape(params[:path] || ''))
-    abs_path = DATA_DIR + @path
-    if File.directory?(abs_path)
-      FileUtils.rm_r(abs_path)
-    else
-      FileUtils.rm(abs_path)
-    end
-    flash[:notice] = "削除成功：#{@path}"
-    UpdateHistory.create(
-      action: 'delete',
-      path: @path,
-    )
-    redirect_path = File.dirname(Pathname.new('/files/').join(@path).to_s)
-    redirect_to redirect_path
+    @path.rmtree
+    UpdateHistory.create(action: 'delete', path: @relative_path)
+    flash[:notice] = "削除成功：#{@relative_path}"
+    redirect_to make_redirect_path(@parent_relative_path)
+  end
+
+  def create_folder
+    folder_name = get_path_param(:foldername)
+    raise 'empty foldername forbidden' if folder_name.blank?
+    folder_path = @path.join(folder_name)
+    raise 'already exists' if folder_path.exist?
+    folder_path.mkdir
+    UpdateHistory.create(action: 'create', path: @relative_path.join(folder_name))
+    redirect_to make_redirect_path(@relative_path)
   end
 
   private
-  def glob_files(pattern)
-    Dir.glob(pattern).reject {|n| n == '.'}.map {|abs_path|
-      {
-        path: Pathname.new(abs_path).relative_path_from(DATA_DIR).to_s,
-        basename: File.basename(abs_path),
-        is_directory: File.directory?(abs_path),
-        updated_at: File.mtime(abs_path),
-        is_image: ['.jpg', '.gif', '.png'].include?(File.extname(abs_path)),
-      }
-    }.sort_by {|file| file[:is_directory] ? 0 : 1}
+  def get_contain_box_files(parent_dir_pathname, recursive: false)
+    glob_pattern = recursive ? '**/*' : '*'
+    Pathname.glob(parent_dir_pathname + glob_pattern)
+      .map {|pathname| map_pathname_to_box_file(pathname)}
+      .sort_by {|file| file[:is_directory] ? 0 : 1}
+  end
+
+  def set_path
+    @path = DATA_DIR + get_path_param(:path)
+    @relative_path = @path.relative_path_from(DATA_DIR)
+    @parent_relative_path = @path.parent.relative_path_from(DATA_DIR)
+    raise "error" unless @path.readable?
+  end
+
+  def map_pathname_to_box_file(pathname)
+    {
+      path: pathname.relative_path_from(DATA_DIR).to_s,
+      basename: pathname.basename.to_s,
+      is_directory: pathname.directory?,
+      is_image: %w(.jpg .gif .png).include?(pathname.extname),
+      updated_at: pathname.mtime,
+    }
+  end
+
+  def make_redirect_path(relative_pathname)
+    "/files/#{URI.encode(relative_pathname.to_s)}"
+  end
+
+  def get_path_param(param_name_sym)
+    URI.decode(params[param_name_sym] || '')
   end
 end

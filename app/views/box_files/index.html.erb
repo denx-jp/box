@@ -20,7 +20,7 @@
 <div class="row">
   <%= form_tag '/upload', method: :post, multipart: true, class: 'col s12' do %>
     <div class="row card-panel">
-      <%= hidden_field_tag :target_dir, @path %>
+      <%= hidden_field_tag :path, @relative_path %>
       <div class="file-field input-field col s9">
         <div class="btn">
           <i class="material-icons left">insert_drive_file</i>
@@ -40,28 +40,53 @@
   <% end %>
 </div>
 
-<ul id="files-collection" class="collection with-header">
-  <li class="collection-header"><%= @path %></li>
-  <% @box_files.each do |box_file| %>
-  <a href="/files/<%= CGI.escape box_file[:path].to_s %>" class="collection-item avatar">
-    <% if box_file[:is_directory] %>
-    <i class="material-icons circle green">folder_open</i>
-    <% else %>
-    <i class="material-icons circle">insert_drive_file</i>
-    <% end %>
+<div class="row">
+  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">フォルダ作成</a>
 
-    <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
-    <p>
-      <%= box_file[:updated_at].strftime('%Y/%m/%d %H:%I:%S') %><br>
-      <%= box_file[:path] %>
-    </p>
-
-    <%= form_tag '/delete', method: :post, class: 'delete-form' do %>
-      <%= hidden_field_tag :path, box_file[:path] %>
-      <%= button_tag type: :submit, class: 'secondary-content', style: 'border:none; background: none;' do %>
-      <i class="material-icons red-text">delete</i>
+  <!-- create folder modal -->
+  <div id="modal1" class="modal">
+    <%= form_tag '/create_folder', method: :post do %>
+    <%= hidden_field_tag :path, @relative_path %>
+    <div class="modal-content">
+      <h4>フォルダ作成</h4>
+      <div class="input-field">
+        <input id="foldername" name="foldername" type="text" class="validate">
+        <label for="foldername">フォルダ名を入力</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <%= button_tag type: :submit, class: 'btn modal-action' do %>
+      <i class="material-icons"></i>作成
       <% end %>
+    </div>
     <% end %>
-  </a>
-  <% end %>
-</ul>
+  </div>
+</div>
+
+<div class="row">
+  <ul id="files-collection" class="collection with-header">
+    <li class="collection-header">/<%= @relative_path %></li>
+    <% @box_files.each do |box_file| %>
+    <a href="/files/<%= URI.encode(box_file[:path]) %>" class="collection-item avatar">
+      <% if box_file[:is_directory] %>
+      <i class="material-icons circle green">folder_open</i>
+      <% else %>
+      <i class="material-icons circle">insert_drive_file</i>
+      <% end %>
+
+      <span class="title"><%= box_file[:basename] %><%= box_file[:is_directory] ? '/' : '' %></span>
+      <p>
+        <%= box_file[:updated_at].strftime('%Y/%m/%d %H:%I:%S') %><br>
+        <%= box_file[:path] %>
+      </p>
+
+      <%= form_tag '/delete', method: :post, class: 'delete-form' do %>
+        <%= hidden_field_tag :path, box_file[:path] %>
+        <%= button_tag class: 'secondary-content', style: 'border:none; background: none;' do %>
+        <i class="material-icons red-text">delete</i>
+        <% end %>
+      <% end %>
+    </a>
+    <% end %>
+  </ul>
+</div>

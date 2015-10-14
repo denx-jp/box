@@ -8,3 +8,4 @@ $ ->
       e.preventDefault()
       return false
   )
+  $('.modal-trigger').leanModal();
