@@ -62,7 +62,7 @@ class BoxFilesController < ApplicationController
 
   private
   def glob_files(pattern)
-    Dir.glob(pattern).reject {|n| n == '.'}.map do |abs_path|
+    Dir.glob(pattern).reject {|n| n == '.'}.map {|abs_path|
       {
         path: Pathname.new(abs_path).relative_path_from(DATA_DIR).to_s,
         basename: File.basename(abs_path),
@@ -70,6 +70,6 @@ class BoxFilesController < ApplicationController
         updated_at: File.mtime(abs_path),
         is_image: ['.jpg', '.gif', '.png'].include?(File.extname(abs_path)),
       }
-    end
+    }.sort_by {|file| file[:is_directory] ? 0 : 1}
   end
 end
