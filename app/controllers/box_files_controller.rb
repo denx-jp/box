@@ -15,6 +15,7 @@ class BoxFilesController < ApplicationController
 
   def search
     keyword = params[:keyword]
+    return redirect_to '/' if keyword.blank?
     @box_files = get_contain_box_files(@path, recursive: true)
       .select {|file| file[:basename].include?(keyword)}
     render :index
