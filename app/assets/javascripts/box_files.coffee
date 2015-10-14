@@ -9,3 +9,4 @@ $ ->
       return false
   )
   $('.modal-trigger').leanModal();
+  $('.button-collapse').sideNav();

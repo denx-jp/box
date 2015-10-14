@@ -13,4 +13,23 @@
  *= require_tree .
  *= require_self
  */
-@import "materialize"
+@import "materialize";
+
+body {
+  font-size: 88%;
+  background: #eee;
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+}
+
+#files-collection .collection-item.avatar .title {
+  font-size: 24px;
+  color: #222;
+}
+
+#search {
+  margin-bottom: 0;
+}
+
+nav .brand-logo {
+  left: 1em;
+}
