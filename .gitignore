@@ -13,6 +13,6 @@
 /log/*
 !/log/.keep
 /tmp
-data/*
+data/
 
 public/assets/
