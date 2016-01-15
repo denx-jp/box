@@ -45,3 +45,6 @@ $ mailcatcher
 
 mailcatcherを起動すると http://localhost:1080 で受信ボックスを見ることができるので
 そこで認証メールを受け取る
+
+## Slack通知
+ファイル作成，削除，更新時にSlackに通知する機能を有効にするには，環境変数 `SLACK_WEBHOOK_URL` に incoming webhook のURLを指定してサーバーを起動する
