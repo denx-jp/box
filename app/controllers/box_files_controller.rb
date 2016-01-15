@@ -1,4 +1,5 @@
 class BoxFilesController < ApplicationController
+  before_filter :set_request
   before_action :authenticate_user!
   before_action :set_path
 
@@ -27,9 +28,12 @@ class BoxFilesController < ApplicationController
     save_path = @path.join(upload_file.original_filename)
     is_overwrite = File.exists?(save_path)
     FileUtils.move(upload_file.path, save_path)
+    # アップロード直後はURLにファイルパスがまだ指定されてないので相対パスが1つ上になってしまうので調整する
+    @parent_relative_path = @relative_path
+    @relative_path = @relative_path.join(upload_file.original_filename)
     UpdateHistory.create(action: is_overwrite ? 'update' : 'create', path: @relative_path)
     flash[:notice] = "アップロード成功：#{save_path.relative_path_from(DATA_DIR)}"
-    redirect_to make_redirect_path(@relative_path)
+    redirect_to make_redirect_path(@parent_relative_path)
   end
 
   def delete
@@ -45,7 +49,7 @@ class BoxFilesController < ApplicationController
     folder_path = @path.join(folder_name)
     raise 'already exists' if folder_path.exist?
     folder_path.mkdir
-    UpdateHistory.create(action: 'create', path: @relative_path.join(folder_name))
+    UpdateHistory.create(action: 'create_dir', path: @relative_path.join(folder_name))
     redirect_to make_redirect_path(@relative_path)
   end
 
@@ -80,5 +84,9 @@ class BoxFilesController < ApplicationController
 
   def get_path_param(param_name_sym)
     URI.decode(params[param_name_sym] || '')
+  end
+
+  def set_request
+    Thread.current[:request] = request
   end
 end
