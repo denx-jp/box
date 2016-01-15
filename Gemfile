@@ -30,6 +30,7 @@ gem 'paperclip'
 gem 'devise'
 gem 'devise-i18n'
 gem 'cancancan'
+gem 'slack-notifier'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
