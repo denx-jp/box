@@ -5,7 +5,7 @@ class UpdateHistory < ActiveRecord::Base
   def post_to_slack
     return unless ENV.include?("SLACK_WEBHOOK_URL")
 
-    url = "#{Thread.current[:request].base_url}/files/#{self.path}"
+    url = "http://box.denx.jp/files/#{self.path}"
     link = "[/#{self.path}](#{url})"
     message =
     case self.action

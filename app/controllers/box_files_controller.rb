@@ -62,7 +62,8 @@ class BoxFilesController < ApplicationController
   end
 
   def set_path
-    @path = DATA_DIR + get_path_param(:path)
+    @path = Pathname.new(File.absolute_path(DATA_DIR + get_path_param(:path)))
+    raise "cannot access outside of DATA_DIR" unless @path.to_s.start_with?(DATA_DIR.to_s)
     @relative_path = @path.relative_path_from(DATA_DIR)
     @parent_relative_path = @path.parent.relative_path_from(DATA_DIR)
     raise "error" unless @path.readable?
